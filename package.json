@@ -1,0 +1,17 @@
+{
+  "name": "pfinder",
+  "version": "1.0.0",
+  "description": "Implementation of A* grid pathfinding algorithm",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "cd test && node test.js"
+  },
+  "keywords": [
+    "pathfinding",
+    "astar",
+    "a-star"
+  ],
+  "author": "Juan Jose Capellan",
+  "license": "MIT"
+}
