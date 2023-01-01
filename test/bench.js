@@ -1,21 +1,25 @@
-import { makeGrid, getPath } from '../src/index.js';
-import { map8x8, map40x40 } from './maps.js';
+import { makeGrid, getPath, getPathFromCache } from '../src/index.js';
+import { map40x40 } from './maps.js';
+import { queries40x40, queries8x8 } from './queries.js';
 
 const grid40x40 = makeGrid(map40x40);
-const grid8x8 = makeGrid(map8x8);
 
-function benchmark(n, grid, x1, y1) {
+function bench_getPathFuncs(grid, queries, name, func) {
     const width = grid[0].length;
     const height = grid.length;
+    const size = queries.length;
+
+    console.log(`\n****** BENCHMARK ${name}() ON A ${width}x${height} GRID OF ${size} QUERIES ******`);
+
     let t0 = performance.now();
-    for (let i = 0; i < n; i++) {
-        const x0 = 0, y0 = 0;
-        let path = getPath(grid, x0, y0, x1, y1);
-    }
+    queries.forEach(q => func(grid, q[0], q[1], q[2], q[3]));
     let duration = performance.now() - t0;
-    console.log(`\n---- BENCHMARK getPath() ${width}x${height} ----`);
-    console.log(`${n} runs of getPath() in ${duration} milliseconds. (${Math.round(n / duration)} ops/ms)`);
+
+    console.log(`Result: ${size} ${name}() runs in ${duration} milliseconds. (${Math.round(size / duration)} ops/ms)`);
 }
 
-benchmark(10000, grid40x40, 39, 39);
-benchmark(10000, grid8x8, 5, 6);
+bench_getPathFuncs(grid40x40, queries40x40, 'getPath', getPath);
+bench_getPathFuncs(grid40x40, queries40x40, 'getPathFromCache', getPathFromCache);
+
+bench_getPathFuncs(grid40x40, queries8x8, 'getPath', getPath);
+bench_getPathFuncs(grid40x40, queries8x8, 'getPathFromCache', getPathFromCache);
