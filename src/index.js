@@ -158,4 +158,13 @@ function setMaxCacheSize(size) {
     maxCacheSize = size;
 }
 
+if (typeof window != 'undefined') {
+    globalThis.Pfinder = {
+        getPath: getPath,
+        getPathFromCache: getPathFromCache,
+        makeGrid: makeGrid,
+        setMaxCacheSize: setMaxCacheSize
+    };
+}
+
 export { getPath, getPathFromCache, makeGrid, setMaxCacheSize };

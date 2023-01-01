@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
+    "build":"npm run test && node scripts/build.js",
     "test": "cd test && node test.js"
   },
   "keywords": [
