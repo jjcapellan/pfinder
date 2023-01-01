@@ -1,5 +1,5 @@
 const cache = new Map();
-let maxCacheSize = 200;
+let maxCacheSize = 1000;
 
 function makeNode(x, y, isWall) {
     return {
