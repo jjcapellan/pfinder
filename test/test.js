@@ -42,5 +42,6 @@ function test(grid, x1, y1, isNull) {
 
 test(grid4x4, 3, 3, true);
 test(grid8x8, 5, 6);
+test(grid8x8, 6, 6, true);
 test(grid40x40, 39, 39);
 

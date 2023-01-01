@@ -89,6 +89,8 @@ function savePath(path, x0, y0, x1, y1) {
 
 function getPath(grid, x0, y0, x1, y1) {
 
+    if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
+
     let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
     if (p) {
         return p;
