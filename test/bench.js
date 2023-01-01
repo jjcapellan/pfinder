@@ -10,12 +10,12 @@ function benchmark(n, grid, x1, y1) {
     let t0 = performance.now();
     for (let i = 0; i < n; i++) {
         const x0 = 0, y0 = 0;
-        let path = getPath(grid8x8, x0, y0, x1, y1);
+        let path = getPath(grid, x0, y0, x1, y1);
     }
     let duration = performance.now() - t0;
     console.log(`\n---- BENCHMARK getPath() ${width}x${height} ----`);
     console.log(`${n} runs of getPath() in ${duration} milliseconds. (${Math.round(n / duration)} ops/ms)`);
 }
 
-benchmark(1000, grid40x40, 39, 39);
-//benchmark(1000, grid8x8, 5, 6);
+benchmark(10000, grid40x40, 39, 39);
+benchmark(10000, grid8x8, 5, 6);
