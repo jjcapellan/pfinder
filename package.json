@@ -13,5 +13,8 @@
     "a-star"
   ],
   "author": "Juan Jose Capellan",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.16.12"
+  }
 }
