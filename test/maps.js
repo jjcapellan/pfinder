@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 const map4x4 = [
     [0, 0, 1, 0],
     [0, 0, 1, 0],
@@ -58,6 +60,24 @@ const map40x40 = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0]
 ];
+
+function genQueries(n, width, height) {
+    let counter = 0;
+    let queries = [];
+    while (counter < n) {
+        let x0 = Math.round(Math.random() * (width - 1));
+        let y0 = Math.round(Math.random() * (height - 1));
+        let x1 = Math.round(Math.random() * (width - 1));
+        let y1 = Math.round(Math.random() * (height - 1));
+        if (x0 == x1 && y0 == y1) continue;
+        counter++;
+        queries.push([x0, y0, x1, y1]);
+    }
+    return queries;
+}
+
+//process.stdout.write(JSON.stringify(genQueries(30000, 40, 40)));
+//process.stdout.write(JSON.stringify(genQueries(30000, 8, 8)));
 
 export { map4x4, map8x8, map40x40 };
 
