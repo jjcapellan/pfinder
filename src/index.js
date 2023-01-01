@@ -62,12 +62,13 @@ function makeGrid(arr2d) {
 
 }
 
-function generatePath(node) {
+function generatePath(node, x0, y0) {
     const path = [];
     let current = node;
     while (current) {
         path.push({ x: current.x, y: current.y });
         current = current.parent;
+        if (current.x == x0 && current.y == y0) break;
     }
 
     return path.reverse();
@@ -114,7 +115,7 @@ function getPath(grid, x0, y0, x1, y1) {
 
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
-            return generatePath(bestNode);
+            return generatePath(bestNode, x0, y0);
         }
 
         // Checks neighbors
