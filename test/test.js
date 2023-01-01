@@ -21,8 +21,7 @@ function checkPath(grid, path, x0, y0, x1, y1) {
     return true;
 }
 
-function test(grid, x1, y1, isNull) {
-    let x0 = 0, y0 = 0;
+function test(grid, x0, y0, x1, y1, isNull) {
     let width = grid[0].length;
     let height = grid.length;
     let path = getPath(grid, x0, y0, x1, y1);
@@ -40,8 +39,9 @@ function test(grid, x1, y1, isNull) {
     }
 }
 
-test(grid4x4, 3, 3, true);
-test(grid8x8, 5, 6);
-test(grid8x8, 6, 6, true);
-test(grid40x40, 39, 39);
+test(grid4x4, 0, 0, 3, 3, true);
+test(grid8x8, 0, 0, 5, 6);
+test(grid8x8, 0, 0, 6, 6, true);
+test(grid40x40, 0, 0, 39, 39);
+test(grid40x40, 7, 18, 6, 29);
 
