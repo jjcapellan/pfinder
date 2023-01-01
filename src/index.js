@@ -127,7 +127,6 @@ function getPath(grid, x0, y0, x1, y1) {
             if (n.g < g) {
                 n.parent = bestNode;
                 n.g = g;
-                let h = getH(n, x1, y1);
                 n.f = g + getH(n, x1, y1);
                 if (!openSet.includes(n)) {
                     openSet.push(n);
