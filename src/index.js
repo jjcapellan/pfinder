@@ -1,6 +1,5 @@
 const cache = new Map();
 let maxCacheSize = 200;
-let cacheActive = true;
 
 function makeNode(x, y, isWall) {
     return {
@@ -89,11 +88,10 @@ function savePath(path, x0, y0, x1, y1) {
 }
 
 function getPath(grid, x0, y0, x1, y1) {
-    if (cacheActive) {
-        let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
-        if (p) {
-            return p;
-        }
+
+    let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
+    if (p) {
+        return p;
     }
 
     const openSet = []; // TODO --> try Set
@@ -121,9 +119,7 @@ function getPath(grid, x0, y0, x1, y1) {
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
             let p = generatePath(bestNode);
-            if (cacheActive) {
-                savePath(p, x0, y0, x1, y1);
-            }
+            savePath(p, x0, y0, x1, y1);
             return p;
         }
 
@@ -150,12 +146,8 @@ function getPath(grid, x0, y0, x1, y1) {
     return null;
 }
 
-function setCache(isActive) {
-    cacheActive = isActive;
-}
-
 function setMaxCacheSize(size) {
     maxCacheSize = size;
 }
 
-export { getPath, makeGrid, setCache, setMaxCacheSize };
+export { getPath, makeGrid, setMaxCacheSize };
