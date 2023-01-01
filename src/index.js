@@ -91,19 +91,13 @@ function getPath(grid, x0, y0, x1, y1) {
 
     if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
 
-    let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
-    if (p) {
-        return p;
-    }
-
-    const openSet = []; // TODO --> try Set
+    let openSet = [];
     const closedSet = [];
 
     // Initial node
     openSet.push(grid[y0][x0]);
 
     while (openSet.length) {
-
         // Extract best node
         let bestNode = openSet[0];
         let idx = 0;
@@ -120,9 +114,7 @@ function getPath(grid, x0, y0, x1, y1) {
 
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
-            let p = generatePath(bestNode);
-            savePath(p, x0, y0, x1, y1);
-            return p;
+            return generatePath(bestNode);
         }
 
         // Checks neighbors
@@ -148,8 +140,22 @@ function getPath(grid, x0, y0, x1, y1) {
     return null;
 }
 
+function getPathFromCache(grid, x0, y0, x1, y1) {
+    if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
+
+    let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
+    if (p !== undefined) {
+        return p;
+    }
+
+    p = getPath(grid, x0, y0, x1, y1);
+    savePath(p, x0, y0, x1, y1);
+
+    return p;
+}
+
 function setMaxCacheSize(size) {
     maxCacheSize = size;
 }
 
-export { getPath, makeGrid, setMaxCacheSize };
+export { getPath, getPathFromCache, makeGrid, setMaxCacheSize };
