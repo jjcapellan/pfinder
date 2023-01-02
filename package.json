@@ -4,8 +4,12 @@
   "description": "Pathfinding library based on the A* algorithm.",
   "main": "src/index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjcapellan/pfinder.git"
+  },
   "scripts": {
-    "build":"npm run test && node scripts/build.js",
+    "build": "npm run test && node scripts/build.js",
     "test": "cd test && node test.js"
   },
   "keywords": [
@@ -14,6 +18,10 @@
     "a-star"
   ],
   "author": "Juan Jose Capellan",
+  "homepage": "https://github.com/jjcapellan/pfinder#readme",
+  "bugs": {
+    "url": "https://github.com/jjcapellan/pfinder/issues"
+  },
   "license": "MIT",
   "devDependencies": {
     "esbuild": "^0.16.12"
