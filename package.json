@@ -1,7 +1,7 @@
 {
   "name": "pfinder",
   "version": "0.1.0",
-  "description": "Implementation of A* grid pathfinding algorithm",
+  "description": "Pathfinding library based on the A* algorithm.",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
