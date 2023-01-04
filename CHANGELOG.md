@@ -1,3 +1,9 @@
+# v0.1.1
+## Fixes
+* Fix: grid nodes state is modified after call getPath(), so precalculated grid is not reusable. It was solved by creating a node signature for each call to the function, and resetting the node.  
+
+---
+
 # v0.1.0
 First version.
 ## New features:
