@@ -121,6 +121,9 @@ function getPath(grid, x0, y0, x1, y1) {
 
     if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
 
+    let signature = Math.random();
+    grid[y0][x0].signature = signature;
+
     const openSet = [];
     const closedSet = [];
 
@@ -152,6 +155,11 @@ function getPath(grid, x0, y0, x1, y1) {
         children.forEach(n => {
             if (n.isWall) return;
             if (closedSet.includes(n)) return;
+            if (n.signature != signature) {
+                n.signature = signature;
+                n.f = 0;
+                n.g = 0;
+            }
 
             let g = bestNode.g + 1;
             if (n.g < g) {
