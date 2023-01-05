@@ -10,6 +10,30 @@
 const cache = new Map();
 let maxCacheSize = 1000;
 
+class Heap {
+    constructor(prop) {
+        this.items = [];
+        this.prop = prop;
+    }
+
+    push(item) {
+        if (!this.items.length) {
+            this.items.push(item);
+            return;
+        }
+
+        for (let i = this.items.length - 1; i >= 0; i--) {
+
+            if (this.items[i][this.prop] >= item[this.prop]) {
+                this.items.splice(i + 1, 0, item);
+                return;
+            }
+        }
+
+        this.items.unshift(item);
+    }
+}
+
 function generatePath(node, x0, y0) {
     const path = [];
     let current = node;
@@ -124,25 +148,17 @@ function getPath(grid, x0, y0, x1, y1) {
     let signature = Math.random();
     grid[y0][x0].signature = signature;
 
-    const openSet = [];
+    const openSet = new Heap('f');
     const closedSet = [];
 
     // Initial node
     openSet.push(grid[y0][x0]);
 
-    while (openSet.length) {
+    while (openSet.items.length) {
         // Extract best node
-        let bestNode = openSet[0];
-        let idx = 0;
-        openSet.forEach((n, i) => {
-            if (n.f < bestNode.f) {
-                bestNode = n;
-                idx = i;
-            }
-        });
+        let bestNode = openSet.items.pop();
 
-        // Move best from openSet to closedSet
-        openSet.splice(idx, 1);
+        // Add best to closedSet
         closedSet.push(bestNode);
 
         // If solution found
@@ -166,7 +182,7 @@ function getPath(grid, x0, y0, x1, y1) {
                 n.parent = bestNode;
                 n.g = g;
                 n.f = g + getH(n, x1, y1);
-                if (!openSet.includes(n)) {
+                if (!openSet.items.includes(n)) {
                     openSet.push(n);
                 }
             }
