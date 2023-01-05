@@ -1,3 +1,9 @@
+# v0.2.0
+## New features
+* New openSet container: new **Head** class optimizes the array push behavior to get the grid node with min f. Using this class, *getPath()* improves its performance by +200% (tested in 500x500 grid).  
+
+---
+
 # v0.1.1
 ## Fixes
 * Fix: grid nodes state is modified after call getPath(), so precalculated grid is not reusable. It was solved by creating a node signature for each call to the function, and resetting the node.  
