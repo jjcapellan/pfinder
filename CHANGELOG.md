@@ -2,7 +2,7 @@
 +80% performance in 500x500 grid.
 ## Improvements
 * *makeGrid()*: not walkable nodes are removed from node.children.
-* *isOpen* and *isClose* node properties avoids the use of *array.include* method inside *getPath()*.  
+* *inOpen* and *inClose* node properties avoids the use of *array.include* method inside *getPath()*.  
 
 ---
 
