@@ -1,9 +1,6 @@
 import { makeGrid, getPath, getPathFromCache, setMaxCacheSize } from '../src/index.js';
 import { map40x40, map8x8 } from './maps.js';
 import { map500x500 } from './map500x500.js';
-import { queries40x40 } from './queries40x40.js';
-import { queries8x8 } from './queries8x8.js';
-import { queries500x500 } from './queries500x500.js';
 
 //const grid40x40 = makeGrid(map40x40);
 //const grid8x8 = makeGrid(map8x8);
