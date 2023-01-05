@@ -1,5 +1,14 @@
+# v0.3.0
++80% performance in 500x500 grid.
+## Improvements
+* *makeGrid()*: not walkable nodes are removed from node.children.
+* *isOpen* and *isClose* node properties avoids the use of *array.include* method inside *getPath()*.  
+
+---
+
 # v0.2.0
-## New features
++200% performance in 500x500 grid.
+## Improvements
 * New openSet container: new **Head** class optimizes the array push behavior to get the grid node with min f. Using this class, *getPath()* improves its performance by +200% (tested in 500x500 grid).  
 
 ---
