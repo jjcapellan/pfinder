@@ -18,6 +18,7 @@ class Heap {
 
     push(item) {
         if (!this.items.length) {
+            item.inOpen = true;
             this.items.push(item);
             return;
         }
@@ -60,8 +61,9 @@ function makeNode(x, y, isWall) {
         parent: null,
         children: [],
         isWall: isWall,
+        inOpen: false,
+        inClose: false,
         g: 0,
-        h: 0,
         f: 0
     };
 }
@@ -147,6 +149,8 @@ function getPath(grid, x0, y0, x1, y1) {
 
     let signature = Math.random();
     grid[y0][x0].signature = signature;
+    grid[y0][x0].inOpen = false;
+    grid[y0][x0].inClose = false;
 
     const openSet = new Heap('f');
     const closedSet = [];
@@ -157,9 +161,11 @@ function getPath(grid, x0, y0, x1, y1) {
     while (openSet.items.length) {
         // Extract best node
         let bestNode = openSet.items.pop();
+        bestNode.inOpen = false;
 
         // Add best to closedSet
         closedSet.push(bestNode);
+        bestNode.inClose = true;
 
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
@@ -170,19 +176,22 @@ function getPath(grid, x0, y0, x1, y1) {
         let children = bestNode.children;
         children.forEach(n => {
             if (n.isWall) return;
-            if (closedSet.includes(n)) return;
             if (n.signature != signature) {
                 n.signature = signature;
+                n.inClose = false;
+                n.inOpen = false;                
                 n.f = 0;
                 n.g = 0;
             }
+            if (n.inClose) return;
+            
 
             let g = bestNode.g + 1;
             if (n.g < g) {
                 n.parent = bestNode;
                 n.g = g;
                 n.f = g + getH(n, x1, y1);
-                if (!openSet.items.includes(n)) {
+                if (!n.inOpen) {
                     openSet.push(n);
                 }
             }
