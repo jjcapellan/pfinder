@@ -106,25 +106,41 @@ function makeGrid(map2d) {
             let children = [];
             let up = false, down = false, left = false, right = false;
             if (idx > 0) {
-                children.push(row[idx - 1]);
+                let node = row[idx - 1];
+                if (!node.isWall) children.push(node);
                 left = true;
             }
             if (idx < width - 1) {
-                children.push(row[idx + 1]);
+                let node = row[idx + 1];
+                if (!node.isWall) children.push(node);
                 right = true;
             }
             if (i > 0) {
-                children.push(grid[i - 1][idx]);
+                let node = grid[i - 1][idx];
+                if (!node.isWall) children.push(node);
                 up = true;
             }
             if (i < height - 1) {
-                children.push(grid[i + 1][idx]);
+                let node = grid[i + 1][idx];
+                if (!node.isWall) children.push(node);
                 down = true;
             }
-            if (up && left) children.push(grid[i - 1][idx - 1]);
-            if (up && right) children.push(grid[i - 1][idx + 1]);
-            if (down && left) children.push(grid[i + 1][idx - 1]);
-            if (down && right) children.push(grid[i + 1][idx + 1]);
+            if (up && left) {
+                let node = grid[i - 1][idx - 1];
+                if (!node.isWall) children.push(node);
+            }
+            if (up && right) {
+                let node = grid[i - 1][idx + 1];
+                if (!node.isWall) children.push(node);
+            }
+            if (down && left) {
+                let node = grid[i + 1][idx - 1];
+                if (!node.isWall) children.push(node);
+            }
+            if (down && right) {
+                let node = grid[i + 1][idx + 1];
+                if (!node.isWall) children.push(node);
+            }
             grid[i][idx].children = children;
         }); // end foreach
     } // end for
@@ -175,16 +191,15 @@ function getPath(grid, x0, y0, x1, y1) {
         // Checks neighbors
         let children = bestNode.children;
         children.forEach(n => {
-            if (n.isWall) return;
             if (n.signature != signature) {
                 n.signature = signature;
                 n.inClose = false;
-                n.inOpen = false;                
+                n.inOpen = false;
                 n.f = 0;
                 n.g = 0;
             }
             if (n.inClose) return;
-            
+
 
             let g = bestNode.g + 1;
             if (n.g < g) {
