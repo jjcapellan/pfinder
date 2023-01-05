@@ -1,78 +1,76 @@
-import { makeGrid, getPath, getPathFromCache, setMaxCacheSize } from '../src/index.js';
-import { map40x40, map8x8 } from './maps.js';
+import { makeGrid, getPath } from '../src/index.js';
+import { map40x40 } from './maps.js';
 import { map500x500 } from './map500x500.js';
 
-//const grid40x40 = makeGrid(map40x40);
-//const grid8x8 = makeGrid(map8x8);
+// Valid paths [x0,y0,x1,y1]
+const queries40x40 = [
+    [0, 0, 39, 39], [0, 0, 36, 39], [2, 0, 39, 39],
+    [2, 0, 36, 39], [3, 10, 39, 39], [3, 10, 36, 39],
+    [0, 0, 30, 37], [2, 0, 30, 37], [3, 10, 30, 37],
+    [39, 0, 39, 0]
+];
+
+const queries500x500 = [
+    [6, 12, 499, 499], [1, 1, 498, 498],
+    [0, 0, 497, 497], [1, 1, 320, 498],
+    [12, 12, 400, 499], [0, 0, 496, 499],
+    [1, 1, 8, 498], [3, 0, 499, 499],
+    [12, 12, 320, 498], [10, 10, 466, 464]
+];
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let grid500x500 = makeGrid(map500x500);
-sleep(100);
+function bench(grid, queries, func, sleepTime, cycles) {
+    const size = queries.length;
+    const width = grid[0].length;
+    const height = grid.length;
+    const q = queries;
 
-////
-//// ****** TEST getPath() FOR 10 VALID LONG PATHS ON 500X500 MAP ******
-////////////////////
+    console.log(`\n****** BENCHMARK ${func.name} -> (samples: ${size}, cycles: ${cycles}, grid: ${width}x${height}, delay: ${sleepTime}ms)`);
 
-// All this paths are not null
-let points = [
-    [6, 12, 499, 499], [1, 1, 498, 498],
-    [0, 0, 497, 497], [1, 1, 320, 498],
-    [12, 12, 400, 499], [0, 0, 496, 499],
-    [1, 1, 8, 498], [3, 0, 499, 499],
-    [12, 12, 320, 498], [10, 10, 466, 464]
-];
-// warmup
-getPath(grid500x500, 12, 12, 466, 464);
-getPath(grid500x500, 10, 10, 320, 498);
+    const times = [];
+    let lastDuration = 0;
+    let ready = false;
+    let totalTime = 0;
+    let warmup = 0;
+    let path;
+    for (let cycle = 0; cycle < cycles; cycle++) {
 
-console.log(`****** TEST getPath() FOR 10 VALID LONG PATHS ON 500X500 MAP ******`);
-let duration = 0;
-for (let i = 0; i < points.length; i++) {
-    let p = points[i];
-    let t0 = performance.now();
-    let path = getPath(grid500x500, p[0], p[1], p[2], p[3]);
-    let dt = performance.now() - t0;
-    console.log(`Path ${i} of length ${path.length} resolved in ${Math.round(dt)}ms`);
-    duration += dt;
+        let t0 = performance.now();
+        for (let i = 0; i < size; i++) {
+            path = func(grid, q[i][0], q[i][1], q[i][2], q[i][3]);
+        }
+        let duration = performance.now() - t0;
+
+        sleep(sleepTime);
+
+        if (!ready) {
+            cycle--;
+            warmup++;
+            if (!lastDuration || lastDuration > duration) {
+                lastDuration = duration;
+                continue;
+            }
+            ready = true;
+            continue;
+        }
+
+        times.push(duration/size);
+        totalTime += duration;
+    }
+
+    let runs = size * cycles;
+    let average = totalTime / runs;
+    console.log(`Warmup cycles: ${warmup}`);
+    console.log(`Runs: ${size} samples x ${cycles} cycles = ${runs}`);
+    console.log(`Time per run (ms)-> Average: ${average} Max: ${Math.max(...times)} Min: ${Math.min(...times)}`);
+
 }
-console.log(`getPath() average time(ms) for 500x500 map: ${Math.round(duration / points.length)}`);
 
-
-
-////
-//// ****** TEST getPathFromCache() FOR 20 VALID LONG REPEATED PATHS ON 500X500 MAP ******
-////////////////////
-
-// All this paths are not null
-points = [
-    [6, 12, 499, 499], [1, 1, 498, 498],
-    [0, 0, 497, 497], [1, 1, 320, 498],
-    [12, 12, 400, 499], [0, 0, 496, 499],
-    [1, 1, 8, 498], [3, 0, 499, 499],
-    [12, 12, 320, 498], [10, 10, 466, 464],
-    [6, 12, 499, 499], [1, 1, 498, 498],
-    [0, 0, 497, 497], [1, 1, 320, 498],
-    [12, 12, 400, 499], [0, 0, 496, 499],
-    [1, 1, 8, 498], [3, 0, 499, 499],
-    [12, 12, 320, 498], [10, 10, 466, 464]
-];
-
-
-// warmup
-getPathFromCache(grid500x500, 12, 12, 466, 464);
-getPathFromCache(grid500x500, 10, 10, 320, 498);
-
-console.log(`\n****** TEST getPathFromCache() FOR 20 VALID LONG REPEATED PATHS ON 500X500 MAP ******`);
-duration = 0;
-for (let i = 0; i < points.length; i++) {
-    let p = points[i];
-    let t0 = performance.now();
-    let path = getPathFromCache(grid500x500, p[0], p[1], p[2], p[3]);
-    let dt = performance.now() - t0;
-    console.log(`Path ${i} of length ${path.length} resolved in ${Math.round(dt)}ms`);
-    duration += dt;
-}
-console.log(`getPath() average time(ms) for 500x500 map: ${Math.round(duration / points.length)}`);
+let grid = makeGrid(map40x40);
+bench(grid, queries40x40, getPath, 200, 20);
+grid = makeGrid(map500x500);
+sleep(1000);
+bench(grid, queries500x500, getPath, 200, 20);
