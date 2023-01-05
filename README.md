@@ -16,13 +16,13 @@ Pathfinding library based on the A* algorithm.
 ## Installation
 ### Browser
 There are two alternatives:
-* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.1.1/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
+* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.2.0/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
 ```html
 <script src = "pfinder.js"></script>
 ```  
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.1.1/dist/pfinder.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.2.0/dist/pfinder.min.js"></script>
 ```  
 **Important**: The library methods are exposed into the global object **Pfinder**  
 ### NPM
