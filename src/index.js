@@ -36,16 +36,16 @@ class Heap {
     }
 }
 
-function generatePath(node, x0, y0) {
+function generatePath(node) {
     const path = [];
     let current = node;
-    while (current) {
-        path.push({ x: current.x, y: current.y });
-        if (current.x == x0 && current.y == y0) break;
+    let i = node.f;
+    do {
+        path[i--] = { x: current.x, y: current.y };
         current = current.parent;
-    }
+    } while (i > -1);
 
-    return path.reverse();
+    return path;
 }
 
 function getH(node, x1, y1) {
@@ -189,7 +189,7 @@ function getPath(grid, x0, y0, x1, y1) {
 
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
-            return generatePath(bestNode, x0, y0);
+            return generatePath(bestNode);
         }
 
         // Checks neighbors
