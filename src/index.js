@@ -9,6 +9,7 @@
 
 const cache = new Map();
 let maxCacheSize = 1000;
+let counter = 0;
 
 class Heap {
     constructor(prop) {
@@ -168,7 +169,7 @@ function getPath(grid, x0, y0, x1, y1) {
 
     if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
 
-    let signature = Math.random();
+    let signature = counter++;
     grid[y0][x0].signature = signature;
     grid[y0][x0].inOpen = false;
     grid[y0][x0].inClose = false;
