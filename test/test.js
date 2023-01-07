@@ -32,6 +32,7 @@ function test(grid, x0, y0, x1, y1, isNull) {
         } else {
             console.log(`Returned null. The destination is not reachable.`);
         }
+        console.log(path);
         console.log(`****** TEST PASSED ******`);
     } else {
         console.log('****** TEST FAILED ******');
