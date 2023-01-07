@@ -174,7 +174,6 @@ function getPath(grid, x0, y0, x1, y1) {
     grid[y0][x0].inClose = false;
 
     const openSet = new Heap('f');
-    const closedSet = [];
 
     // Initial node
     openSet.push(grid[y0][x0]);
@@ -185,7 +184,6 @@ function getPath(grid, x0, y0, x1, y1) {
         bestNode.inOpen = false;
 
         // Add best to closedSet
-        closedSet.push(bestNode);
         bestNode.inClose = true;
 
         // If solution found
