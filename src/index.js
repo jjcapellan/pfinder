@@ -105,39 +105,44 @@ function makeGrid(map2d) {
         row.forEach((n, idx) => {
             let children = [];
             let up = false, down = false, left = false, right = false;
+            let uw = false, dw = false, lw = false, rw = false;
             if (idx > 0) {
                 let node = row[idx - 1];
-                if (!node.isWall) children.push(node);
                 left = true;
+                if (node.isWall) lw = true;
+                if (!node.isWall) children.push(node);
             }
             if (idx < width - 1) {
                 let node = row[idx + 1];
-                if (!node.isWall) children.push(node);
                 right = true;
+                if (node.isWall) rw = true;
+                if (!node.isWall) children.push(node);
             }
             if (i > 0) {
                 let node = grid[i - 1][idx];
-                if (!node.isWall) children.push(node);
                 up = true;
+                if (node.isWall) uw = true;
+                if (!node.isWall) children.push(node);
             }
             if (i < height - 1) {
                 let node = grid[i + 1][idx];
-                if (!node.isWall) children.push(node);
                 down = true;
+                if (node.isWall) dw = true;
+                if (!node.isWall) children.push(node);
             }
-            if (up && left) {
+            if ((up && left) && !(uw && lw)) {
                 let node = grid[i - 1][idx - 1];
                 if (!node.isWall) children.push(node);
             }
-            if (up && right) {
+            if ((up && right) && !(uw && rw)) {
                 let node = grid[i - 1][idx + 1];
                 if (!node.isWall) children.push(node);
             }
-            if (down && left) {
+            if ((down && left) && !(dw && lw)) {
                 let node = grid[i + 1][idx - 1];
                 if (!node.isWall) children.push(node);
             }
-            if (down && right) {
+            if ((down && right) && !(dw && rw)) {
                 let node = grid[i + 1][idx + 1];
                 if (!node.isWall) children.push(node);
             }
