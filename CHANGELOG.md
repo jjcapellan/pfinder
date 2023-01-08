@@ -1,3 +1,15 @@
+# v0.5.0
++50% performance in 500x500 grid.
+## Changes
+* makeGrid(map, allowCorners): now second parameter is applied to all corners. If allowCorners == false, the path will avoid all corners.
+## Improvements
+* Improved *Heap* class
+* Rounded h value: this produces integer f values, so now insert nodes in the heap container is faster.
+## Fixes
+* *makeGrid*: causes error on not square maps. (height and width were interchanged)  
+
+---
+
 # v0.4.0
 +15% performance in 500x500 grid. In this version, by default the path doesnt cross between two corners. To get old behavior use <code>makeGrid(map, true)</code>.
 ## New features
