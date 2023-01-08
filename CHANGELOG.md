@@ -5,7 +5,6 @@
 ## Improvements
 * Removed closedSet array: there is a node property *isClose* instead.
 * Node signature is made by a simple integer counter, instead of previus random numbers.
-* *generatePath()*: now reverse the path before return it is not needed.  
 
 ---
 
