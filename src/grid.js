@@ -24,8 +24,8 @@ function makeNode(x, y, isWall) {
  * @returns {Object[][]} 2d array of nodes used by other functions to search paths
  */
 function makeGrid(map2d, allowCorners) {
-    const width = map2d.length;
-    const height = map2d[0].length;
+    const height = map2d.length;
+    const width = map2d[0].length;
     const grid = [];
 
     // Populates grid with nodes
