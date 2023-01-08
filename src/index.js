@@ -3,6 +3,8 @@
 * @license      {@link https://github.com/jjcapellan/pfinder/blob/master/LICENSE | MIT License}
 */
 
+import { MultiHeap } from "./heap.js";
+
 ////
 //// PRIVATE
 //////////////////////////////////////////
@@ -11,38 +13,13 @@ const cache = new Map();
 let maxCacheSize = 1000;
 let counter = 0;
 
-class Heap {
-    constructor(prop) {
-        this.items = [];
-        this.prop = prop;
-    }
-
-    push(item) {
-        if (!this.items.length) {
-            item.inOpen = true;
-            this.items.push(item);
-            return;
-        }
-
-        for (let i = this.items.length - 1; i >= 0; i--) {
-
-            if (this.items[i][this.prop] >= item[this.prop]) {
-                this.items.splice(i + 1, 0, item);
-                return;
-            }
-        }
-
-        this.items.unshift(item);
-    }
-}
-
 function generatePath(node, x0, y0) {
     const path = [];
     let current = node;
-    let i=0;
-    while(current) {
+    let i = 0;
+    while (current) {
         path[i++] = { x: current.x, y: current.y };
-        if(current.x == x0 && current.y == y0) break;
+        if (current.x == x0 && current.y == y0) break;
         current = current.parent;
     };
 
@@ -53,7 +30,7 @@ function getH(node, x1, y1) {
     let dx = Math.abs(node.x - x1);
     let dy = Math.abs(node.y - y1);
     // h = D * (dx + dy) + (sqrt(D^2 + D^2) - 2 * D) * min(dx, dy)
-    return 10 * (dx + dy) - 5.857 * Math.min(dx, dy);
+    return (10 * (dx + dy) - 5.857 * Math.min(dx, dy));
 }
 
 function makeNode(x, y, isWall) {
@@ -196,14 +173,14 @@ function getPath(grid, x0, y0, x1, y1) {
     grid[y0][x0].inOpen = false;
     grid[y0][x0].inClose = false;
 
-    const openSet = new Heap('f');
+    const openSet = new MultiHeap('f', 100, 10);
 
     // Initial node
     openSet.push(grid[y0][x0]);
 
-    while (openSet.items.length) {
+    while (openSet.count) {
         // Extract best node
-        let bestNode = openSet.items.pop();
+        let bestNode = openSet.pop();
         bestNode.inOpen = false;
 
         // Add best to closedSet
@@ -211,7 +188,7 @@ function getPath(grid, x0, y0, x1, y1) {
 
         // If solution found
         if (bestNode.x == x1 && bestNode.y == y1) {
-            return generatePath(bestNode,x0,y0);
+            return generatePath(bestNode, x0, y0);
         }
 
         // Checks neighbors
