@@ -1,6 +1,6 @@
 {
   "name": "pfinder",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Pathfinding library based on the A* algorithm.",
   "main": "src/index.js",
   "type": "module",

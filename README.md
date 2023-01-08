@@ -16,13 +16,13 @@ Pathfinding library based on the A* algorithm.
 ## Installation
 ### Browser
 There are two alternatives:
-* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.3.0/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
+* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.4.0/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
 ```html
 <script src = "pfinder.js"></script>
 ```  
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.3.0/dist/pfinder.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.4.0/dist/pfinder.min.js"></script>
 ```  
 **Important**: The library methods are exposed into the global object **Pfinder**  
 ### NPM
@@ -90,10 +90,11 @@ let path = Pfinder.getPathFromCache(grid, 0, 0, 3, 3);
 ---
 
 ## API
-### **makeGrid(map: number[][]) : Object[][]** 
+### **makeGrid(map: number[][], allowCross?: boolean) : Object[][]** 
 Converts 2d array of numbers to 2d array of nodes.  
 Parameters:
-* *map*: 2d array of numbers representing a 2d space (0 = walkable, non 0 = obstacle).  
+* *map*: 2d array of numbers representing a 2d space (0 = walkable, non 0 = obstacle).
+* *allowCross*: should diagonal path cross between two corners?. default = false. Setting this parameter *true* improves the performance.
 
 Returns:  
 2d array of nodes used by other functions to search paths.

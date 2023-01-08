@@ -1,7 +1,7 @@
-# wip
-+15% performance in 500x500 grid.
+# v0.4.0
++15% performance in 500x500 grid. In this version, by default the path doesnt cross between two corners. To get old behavior use <code>makeGrid(map, true)</code>.
 ## New features
-* *makeGrid()*: accepts a second parammeter *allowCross*, if is true allows path cross between two corners.
+* *makeGrid()*: accepts a second parammeter *allowCross*, if it is true allows path to cross between two corners.
 ## Improvements
 * Removed closedSet array: there is a node property *isClose* instead.
 * Node signature is made by a simple integer counter, instead of previus random numbers.
