@@ -1,3 +1,14 @@
+# wip
++15% performance in 500x500 grid.
+## New features
+* *makeGrid()*: accepts a second parammeter *allowCross*, if is true allows path cross between two corners.
+## Improvements
+* Removed closedSet array: there is a node property *isClose* instead.
+* Node signature is made by a simple integer counter, instead of previus random numbers.
+* *generatePath()*: now reverse the path before return it is not needed.  
+
+---
+
 # v0.3.0
 +80% performance in 500x500 grid.
 ## Improvements
