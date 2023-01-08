@@ -39,14 +39,14 @@ class Heap {
 function generatePath(node, x0, y0) {
     const path = [];
     let current = node;
-    let i = node.f;
+    let i=0;
     while(current) {
-        path[i--] = { x: current.x, y: current.y };
+        path[i++] = { x: current.x, y: current.y };
         if(current.x == x0 && current.y == y0) break;
         current = current.parent;
     };
 
-    return path;
+    return path.reverse();
 }
 
 function getH(node, x1, y1) {
