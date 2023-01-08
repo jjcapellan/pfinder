@@ -1,3 +1,8 @@
+/**
+* @copyright    2023 Juan Jose Capellan
+* @license      {@link https://github.com/jjcapellan/pfinder/blob/master/LICENSE | MIT License}
+*/
+
 const cache = new Map();
 let maxCacheSize = 1000;
 
