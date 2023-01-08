@@ -20,10 +20,10 @@ function makeNode(x, y, isWall) {
 /**
  * Converts 2d array of numbers to 2d array of nodes
  * @param {number[][]} map2d 2d array of numbers representing a 2d space (0 = walkable, non 0 = obstacle)
- * @param {boolean} [allowCross = false] can path cross in diagonal between two corners?
+ * @param {boolean} [allowCorners = false] should path pass through corners?
  * @returns {Object[][]} 2d array of nodes used by other functions to search paths
  */
-function makeGrid(map2d, allowCross) {
+function makeGrid(map2d, allowCorners) {
     const width = map2d.length;
     const height = map2d[0].length;
     const grid = [];
@@ -69,7 +69,7 @@ function makeGrid(map2d, allowCross) {
                 if (!node.isWall) children.push(node);
             }
 
-            if (allowCross) {
+            if (allowCorners) {
                 if ((up && left)) {
                     let node = grid[i - 1][idx - 1];
                     if (!node.isWall) children.push(node);
@@ -87,19 +87,19 @@ function makeGrid(map2d, allowCross) {
                     if (!node.isWall) children.push(node);
                 }
             } else {
-                if ((up && left) && !(uw && lw)) {
+                if ((up && left) && !(uw || lw)) {
                     let node = grid[i - 1][idx - 1];
                     if (!node.isWall) children.push(node);
                 }
-                if ((up && right) && !(uw && rw)) {
+                if ((up && right) && !(uw || rw)) {
                     let node = grid[i - 1][idx + 1];
                     if (!node.isWall) children.push(node);
                 }
-                if ((down && left) && !(dw && lw)) {
+                if ((down && left) && !(dw || lw)) {
                     let node = grid[i + 1][idx - 1];
                     if (!node.isWall) children.push(node);
                 }
-                if ((down && right) && !(dw && rw)) {
+                if ((down && right) && !(dw || rw)) {
                     let node = grid[i + 1][idx + 1];
                     if (!node.isWall) children.push(node);
                 }
