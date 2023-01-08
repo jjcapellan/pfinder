@@ -7,7 +7,7 @@ const queries40x40 = [
     [0, 0, 39, 39], [0, 0, 36, 39], [2, 0, 39, 39],
     [2, 0, 36, 39], [3, 10, 39, 39], [3, 10, 36, 39],
     [0, 0, 30, 37], [2, 0, 30, 37], [3, 10, 30, 37],
-    [39, 0, 39, 0]
+    [0, 39, 39, 0]
 ];
 
 const queries500x500 = [
@@ -44,7 +44,6 @@ function bench(grid, queries, func, sleepTime, cycles) {
         }
         let duration = performance.now() - t0;
 
-        sleep(sleepTime);
 
         if (!ready) {
             cycle--;
@@ -69,8 +68,10 @@ function bench(grid, queries, func, sleepTime, cycles) {
 
 }
 
+
 let grid = makeGrid(map40x40);
+await sleep(500);
 bench(grid, queries40x40, getPath, 200, 20);
 grid = makeGrid(map500x500);
-sleep(1000);
+await sleep(500);
 bench(grid, queries500x500, getPath, 200, 20);
