@@ -1,4 +1,3 @@
-
 const cache = new Map();
 let maxCacheSize = 1000;
 
