@@ -3,7 +3,7 @@
 * @license      {@link https://github.com/jjcapellan/pfinder/blob/master/LICENSE | MIT License}
 */
 
-class Heap {
+class HeapBox {
     constructor(prop) {
         this.items = [];
         this.prop = prop;
@@ -28,11 +28,11 @@ class Heap {
     }
 }
 
-class MultiHeap {
+class Heap {
     constructor(prop, range, size) {
         let heaps = [];
         for (let i = 0; i < size; i++) {
-            heaps.push(new Heap(prop));
+            heaps.push(new HeapBox(prop));
         }
         this.heaps = heaps;
         this.prop = prop;
@@ -42,7 +42,7 @@ class MultiHeap {
 
     addHeaps(n) {
         for (let i = 0; i < n; i++) {
-            this.heaps.push(new Heap(this.prop));
+            this.heaps.push(new HeapBox(this.prop));
         }
     }
 
@@ -67,4 +67,4 @@ class MultiHeap {
     }
 }
 
-export { MultiHeap };
+export { Heap  };

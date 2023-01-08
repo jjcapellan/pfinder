@@ -3,7 +3,7 @@
 * @license      {@link https://github.com/jjcapellan/pfinder/blob/master/LICENSE | MIT License}
 */
 
-import { MultiHeap } from './heap.js';
+import { Heap } from './heap.js';
 
 let counter = 0;
 
@@ -46,7 +46,7 @@ function getPath(grid, x0, y0, x1, y1) {
     grid[y0][x0].inOpen = false;
     grid[y0][x0].inClose = false;
 
-    const openSet = new MultiHeap('f', 100, 10);
+    const openSet = new Heap('f', 100, 10);
 
     // Initial node
     openSet.push(grid[y0][x0]);
