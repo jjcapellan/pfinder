@@ -56,10 +56,6 @@ function orthogonalScan(map, x0, y0, params) {
     }
 }
 
-function getFlag(flag, n) {
-    return (flag & (1 << n)) != 0;
-}
-
 function diagonalScan(map, grid, x0, y0, params) {
     const p = params;
     let s = getSignature(map, x0, y0);
@@ -71,8 +67,9 @@ function diagonalScan(map, grid, x0, y0, params) {
         s = getSignature(map, x0 + p.h * count, y0 + p.v * count);
         if (s[p.a] || s[p.b] || s[p.c]) return 0;
 
-        let jFlag = grid[y0 + count][x0 + count].jFlag;
-        if (getFlag(jFlag, p.a) || getFlag(jFlag, p.c)) return count;
+        const isJump = grid[y0 + p.v * count][x0 + p.h * count].jump;
+        const jps = grid[y0 + p.v * count][x0 + p.h * count].jps;
+        if (isJump && (jps[p.a] || jps[p.c])) return count;
     }
 }
 
@@ -95,3 +92,5 @@ function setDiagonalDistances(grid, map, x0, y0) {
     grid[y0][x0].jps[4] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.rightDown);
     grid[y0][x0].jps[6] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.leftDown);
 }
+
+export { getOrthogonalDistances, setDiagonalDistances };
