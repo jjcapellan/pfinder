@@ -39,7 +39,7 @@ function getH(node, x1, y1) {
  */
 function getPath(grid, x0, y0, x1, y1) {
 
-    if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
+    if (!grid[y0][x0] || !grid[y1][x1]) return null;
 
     let signature = counter++;
     grid[y0][x0].signature = signature;
