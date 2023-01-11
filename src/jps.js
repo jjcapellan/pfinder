@@ -42,17 +42,21 @@ const DIAG_PARAMS = {
     leftUp: { a: 7, b: 0, c: 1, v: -1, h: -1 }
 };
 
+function setBit(node, bit) {
+    node.jFlag |= (1 << bit);
+}
+
 function orthogonalScan(map, x0, y0, params) {
     const p = params;
     let s = getSignature(map, x0, y0);
     let count = 0;
-    if (s[p.e]) return 0;
+    if (s[p.e]) return { dst: 0, isJump: false };
 
     while (true) {
         count++;
         s = getSignature(map, x0 + p.h * count, y0 + p.v * count);
-        if ((s[p.a] && !s[p.b]) || (s[p.c] && !s[p.d])) return count;
-        if (s[p.e]) return 0;
+        if ((s[p.a] && !s[p.b]) || (s[p.c] && !s[p.d])) return { dst: count, isJump: true };
+        if (s[p.e]) return { dst: count, isJump: false };
     }
 }
 
@@ -60,37 +64,59 @@ function diagonalScan(map, grid, x0, y0, params) {
     const p = params;
     let s = getSignature(map, x0, y0);
     let count = 0;
-    if (s[p.a] || s[p.b] || s[p.c]) return 0;
+    if (s[p.a] || s[p.b] || s[p.c]) return { dst: 0, isJump: false };
 
     while (true) {
         count++;
         s = getSignature(map, x0 + p.h * count, y0 + p.v * count);
-        if (s[p.a] || s[p.b] || s[p.c]) return 0;
-
         const isJump = grid[y0 + p.v * count][x0 + p.h * count].jump;
-        const jps = grid[y0 + p.v * count][x0 + p.h * count].jps;
-        if (isJump && (jps[p.a] || jps[p.c])) return count;
+        if (x0 == 0 && y0 == 0) console.log(s);
+        if ((s[p.a] || s[p.b] || s[p.c]) && !isJump) return { dst: count, isJump: false };
+
+
+        const distances = grid[y0 + p.v * count][x0 + p.h * count].distances;
+        if (isJump && (distances[p.a] || distances[p.c])) return { dst: count, isJump: true };
     }
 }
 
-function getOrthogonalDistances(map, x0, y0) {
+function setOrthogonalDistances(grid, map, x0, y0) {
+    const n = grid[y0][x0];
     // |0|u|2|
-    // |l| |r|
+    // |l|n|r|
     // |6|d|4|
-
-    const up = orthogonalScan(map, x0, y0, ORTH_PARAMS.up);
-    const down = orthogonalScan(map, x0, y0, ORTH_PARAMS.down);
-    const left = orthogonalScan(map, x0, y0, ORTH_PARAMS.left);
-    const right = orthogonalScan(map, x0, y0, ORTH_PARAMS.right);
-
-    return [0, up, 0, right, 0, down, 0, left];
+    const u = orthogonalScan(map, x0, y0, ORTH_PARAMS.up);
+    const d = orthogonalScan(map, x0, y0, ORTH_PARAMS.down);
+    const l = orthogonalScan(map, x0, y0, ORTH_PARAMS.left);
+    const r = orthogonalScan(map, x0, y0, ORTH_PARAMS.right);
+    // distances
+    n.distances[1] = u.dst;
+    n.distances[3] = r.dst;
+    n.distances[5] = d.dst;
+    n.distances[7] = l.dst;
+    // flag
+    if (u.isJump) setBit(n, 1);
+    if (r.isJump) setBit(n, 3);
+    if (d.isJump) setBit(n, 5);
+    if (l.isJump) setBit(n, 7);
 }
 
 function setDiagonalDistances(grid, map, x0, y0) {
-    grid[y0][x0].jps[0] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.leftUp);
-    grid[y0][x0].jps[2] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.rightUp);
-    grid[y0][x0].jps[4] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.rightDown);
-    grid[y0][x0].jps[6] = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.leftDown);
+    const n = grid[y0][x0];
+    // |lu|1|ru|
+    // |7 | |3 |
+    // |ld|5|rd|
+    const lu = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.leftUp);
+    const ru = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.rightUp);
+    const rd = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.rightDown);
+    const ld = diagonalScan(map, grid, x0, y0, DIAG_PARAMS.leftDown);
+    n.distances[0] = lu.dst;
+    n.distances[2] = ru.dst;
+    n.distances[4] = rd.dst;
+    n.distances[6] = ld.dst;
+    if (lu.isJump) setBit(n, 0);
+    if (ru.isJump) setBit(n, 2);
+    if (rd.isJump) setBit(n, 4);
+    if (ld.isJump) setBit(n, 6);
 }
 
-export { getOrthogonalDistances, setDiagonalDistances };
+export { setOrthogonalDistances, setDiagonalDistances };

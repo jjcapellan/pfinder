@@ -2,18 +2,43 @@
 * @copyright    2023 Juan Jose Capellan
 * @license      {@link https://github.com/jjcapellan/pfinder/blob/master/LICENSE | MIT License}
 */
+import { setOrthogonalDistances, setDiagonalDistances } from './jps.js';
+
+// |0|1|2|
+// |7|n|3|
+// |6|5|4|
+const dirs = [
+    { v: -1, h: -1 },
+    { v: -1, h: 0 },
+    { v: -1, h: 1 },
+    { v: 0, h: 1 },
+    { v: 1, h: 1 },
+    { v: 1, h: 0 },
+    { v: 1, h: -1 },
+    { v: 0, h: -1 }
+];
 
 function makeNode(x, y) {
     return {
         x: x,
         y: y,
         parent: null,
-        children: [],
+        distances: [],
+        jFlag: 0,
+        jump: false,
         inOpen: false,
         inClose: false,
         g: 0,
         f: 0
     };
+};
+
+function setFlagBit(node, bit) {
+    node.jFlag |= (1 << bit);
+}
+
+function getBit(node, bit) {
+    return (node.jFlag & (1 << bit)) != 0;
 }
 
 /**
@@ -36,77 +61,34 @@ function makeGrid(map2d, allowCorners) {
         grid.push(row);
     }
 
-    // Calc neighbors
-    for (let i = 0; i < height; i++) {
-        let row = grid[i];
-        row.forEach((n, idx) => {
+    // Calc orthogonal distances and mark jumps
+    for (let y = 0; y < height; y++) {
+        let row = grid[y];
+        row.forEach((n, x) => {
             if (!n) return;
-            let children = [];
-            let up = false, down = false, left = false, right = false;
-            let uw = false, dw = false, lw = false, rw = false;
-            if (idx > 0) {
-                let node = row[idx - 1];
-                left = true;
-                if (!node) lw = true;
-                if (node) children.push(node);
-            }
-            if (idx < width - 1) {
-                let node = row[idx + 1];
-                right = true;
-                if (!node) rw = true;
-                if (node) children.push(node);
-            }
-            if (i > 0) {
-                let node = grid[i - 1][idx];
-                up = true;
-                if (!node) uw = true;
-                if (node) children.push(node);
-            }
-            if (i < height - 1) {
-                let node = grid[i + 1][idx];
-                down = true;
-                if (!node) dw = true;
-                if (node) children.push(node);
-            }
 
-            if (allowCorners) {
-                if ((up && left)) {
-                    let node = grid[i - 1][idx - 1];
-                    if (node) children.push(node);
-                }
-                if ((up && right)) {
-                    let node = grid[i - 1][idx + 1];
-                    if (node) children.push(node);
-                }
-                if ((down && left)) {
-                    let node = grid[i + 1][idx - 1];
-                    if (node) children.push(node);
-                }
-                if ((down && right)) {
-                    let node = grid[i + 1][idx + 1];
-                    if (node) children.push(node);
-                }
-            } else {
-                if ((up && left) && !(uw || lw)) {
-                    let node = grid[i - 1][idx - 1];
-                    if (node) children.push(node);
-                }
-                if ((up && right) && !(uw || rw)) {
-                    let node = grid[i - 1][idx + 1];
-                    if (node) children.push(node);
-                }
-                if ((down && left) && !(dw || lw)) {
-                    let node = grid[i + 1][idx - 1];
-                    if (node) children.push(node);
-                }
-                if ((down && right) && !(dw || rw)) {
-                    let node = grid[i + 1][idx + 1];
-                    if (node) children.push(node);
-                }
-            }
-            grid[i][idx].children = children;
-        }); // end foreach
-    } // end for
+            setOrthogonalDistances(grid, map2d, x, y);
+
+            // |0|1|2|
+            // |7|n|3|  Mark jumps
+            // |6|5|4|
+            const d = grid[y][x].distances;
+            const f = grid[y][x].jFlag;
+            if (d[1] && getBit(n, 1)) grid[y - d[1]][x].jump = true;
+            if (d[3] && getBit(n, 3)) grid[y][x + d[3]].jump = true;
+            if (d[5] && getBit(n, 5)) grid[y + d[5]][x].jump = true;
+            if (d[7] && getBit(n, 7)) grid[y][x - d[7]].jump = true;
+        });
+    }
+
+    // Calc diagonal distances (previus mark jumps is required)
+    for (let y = 0; y < height; y++) {
+        let row = grid[y];
+        row.forEach((n, x) => {
+            if (!n) return;
+            setDiagonalDistances(grid, map2d, x, y);
+        });
+    }
 
     return grid;
 
