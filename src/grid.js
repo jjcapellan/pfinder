@@ -4,20 +4,6 @@
 */
 import { setOrthogonalDistances, setDiagonalDistances } from './jps.js';
 
-// |0|1|2|
-// |7|n|3|
-// |6|5|4|
-const dirs = [
-    { v: -1, h: -1 },
-    { v: -1, h: 0 },
-    { v: -1, h: 1 },
-    { v: 0, h: 1 },
-    { v: 1, h: 1 },
-    { v: 1, h: 0 },
-    { v: 1, h: -1 },
-    { v: 0, h: -1 }
-];
-
 function makeNode(x, y) {
     return {
         x: x,
@@ -32,10 +18,6 @@ function makeNode(x, y) {
         f: 0
     };
 };
-
-function setFlagBit(node, bit) {
-    node.jFlag |= (1 << bit);
-}
 
 function getBit(node, bit) {
     return (node.jFlag & (1 << bit)) != 0;
