@@ -27,6 +27,28 @@ function getH(node, x1, y1) {
     return Math.floor(10 * (dx + dy) - 5.857 * Math.min(dx, dy));
 }
 
+function getDirection(p, n) {
+    // |0|1|2|
+    // |p|n|3|
+    // |6|5|4|
+    const dx = n.x - p.x;
+    const dy = n.y - p.y;
+    if (dx < 0) {
+        if (dy < 0) return 0;
+        if (dy == 0) return 7;
+        if (dy > 0) return 6;
+    }
+    if (dx == 0) {
+        if (dy < 0) return 1;
+        if (dy > 0) return 5;
+    }
+    if (dx > 0) {
+        if (dy < 0) return 2;
+        if (dy == 0) return 3;
+        if (dy > 0) return 4;
+    }
+}
+
 /**
  * Calculates the required path from a grid
  * @param {Object[][]} grid 2d array of nodes
