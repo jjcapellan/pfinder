@@ -6,7 +6,8 @@
 import { Heap } from './heap.js';
 import { getBit } from './grid.js';
 
-let counter = 0;
+// Node.hash: allow reuse the grid. nhash identifies unique search operation
+let nhash = 0;
 
 // |0|1|2|
 // |7|n|3|
@@ -102,6 +103,15 @@ function checkTarget(node, target, dir, distance) {
     return false;
 }
 
+function resetNode(node, hash) {
+    node.hash = hash;
+    node.parent = null;
+    node.inOpen = false;
+    node.inClose = false;
+    node.g = 0;
+    node.f = 0;
+}
+
 /**
  * Calculates the required path from a grid
  * @param {Object[][]} grid 2d array of nodes
@@ -116,13 +126,16 @@ function getPath(grid, x0, y0, x1, y1) {
 
     if (!grid[y0][x0] || !grid[y1][x1]) return null;
 
-    const target = grid[y1][x1];
-
     const allDirs = [0, 1, 2, 3, 4, 5, 6, 7];
+    const target = grid[y1][x1];
     const openSet = new Heap('f', 100, 10);
 
+    nhash++;
+
     // Initial node
-    openSet.push(grid[y0][x0]);
+    const startNode = grid[y0][x0];
+    resetNode(startNode, nhash);
+    openSet.push(startNode);
 
     while (openSet.count) {
         // Extract best node
@@ -131,14 +144,15 @@ function getPath(grid, x0, y0, x1, y1) {
         best.inClose = true;
 
         if (best.x == x1 && best.y == y1) {
-            return generatePath(bestNode);
+            return generatePath(best);
         }
 
+        // Select valid directions for current exploration direction
         const dirs = best.parent ? dirFilter[getDirection(best.parent, best)] : allDirs;
 
         for (let i = 0; i < dirs.length; i++) {
-            const d = dirs[i];
-            const p = dirParams[d];
+            const d = dirs[i]; // 0..7
+            const p = dirParams[d]; // {v,h} vertical and horizontal multipliers
             const distance = best.distances[d];
 
             if (distance) {
@@ -146,33 +160,45 @@ function getPath(grid, x0, y0, x1, y1) {
                     target.parent = best;
                     return generatePath(target);
                 }
-                const t = best.x == 3 && best.y == 7;
 
-                // If diagonal
+                // If diagonal direction (0,3,4, or 6)
                 if (d % 2 == 0) {
-                    // diagonal has three directions (2 branches + 1 main)
+                    // |0|A|M|
+                    // |7|n|B|
+                    // |p|5|4|
+                    // diagonal has three directions (2 branches(A,B) + 1 main(M))
                     let dirA = dirFilter[d][0];
                     let dirB = dirFilter[d][2];
 
+                    // Diagonal expansion
+                    //   ||/--
+                    //   |/---
+                    //   n----
                     for (let j = 0; j <= distance; j++) {
                         const node = grid[best.y + p.v * j][best.x + p.h * j];
                         let distA = node.distances[dirA];
                         let distB = node.distances[dirB];
+
+                        if (node.hash != nhash) resetNode(node, nhash);
+
                         if (distA) {
 
                             if (checkTarget(node, target, dirA, distA)) {
-                                if(j)node.parent = best;
+                                if (j) node.parent = best;
                                 target.parent = node;
                                 return generatePath(target);
                             }
 
                             if (getBit(node, dirA)) {
                                 let next = getNext(grid, node, distA, dirA);
+
+                                if (next.hash != nhash) resetNode(next, nhash);
+
                                 let g = best.g + distance;
-                                if(j)node.parent = best;
+                                if (j) node.parent = best;
                                 node.g = g;
                                 g = node.g + j;
-                                if ((next.inClose || next.inOpen) && next.g < g) continue;
+                                if (next.inClose || (next.inOpen && next.g < g)) continue;
 
                                 next.parent = node;
                                 next.g = g;
@@ -189,18 +215,20 @@ function getPath(grid, x0, y0, x1, y1) {
 
                         if (distB) {
                             if (checkTarget(node, target, dirB, distB)) {
-                                if(j)node.parent = best;
+                                if (j) node.parent = best;
                                 target.parent = node;
                                 return generatePath(target);
                             }
                             if (getBit(node, dirB)) {
                                 let next = getNext(grid, node, distB, dirB);
 
+                                if (next.hash != nhash) resetNode(next, nhash);
+
                                 let g = best.g + distance;
-                                if(j)node.parent = best;
+                                if (j) node.parent = best;
                                 node.g = g;
                                 g = node.g + j;
-                                if ((next.inClose || next.inOpen) && next.g < g) continue;
+                                if (next.inClose || (next.inOpen && next.g < g)) continue;
 
                                 next.parent = node;
                                 next.g = g;
@@ -219,8 +247,11 @@ function getPath(grid, x0, y0, x1, y1) {
                 // ends on jump
                 if (getBit(best, d)) {
                     let next = getNext(grid, best, distance, d);
+
+                    if (next.hash != nhash) resetNode(next, nhash);
+
                     let g = best.g + distance;
-                    if ((next.inClose || next.inOpen) && next.g < g) continue;
+                    if (next.inClose || (next.inOpen && next.g < g)) continue;
 
                     next.parent = best;
                     next.g = g;
@@ -236,59 +267,6 @@ function getPath(grid, x0, y0, x1, y1) {
         }// end for
     } // end while
     return null;
-
-
-
-    /*let signature = counter++;
-    grid[y0][x0].signature = signature;
-    grid[y0][x0].inOpen = false;
-    grid[y0][x0].inClose = false;
-
-    const openSet = new Heap('f', 100, 10);
-
-    // Initial node
-    openSet.push(grid[y0][x0]);
-
-    while (openSet.count) {
-        // Extract best node
-        let bestNode = openSet.pop();
-        bestNode.inOpen = false;
-
-        // Add best to closedSet
-        bestNode.inClose = true;
-
-        // If solution found
-        if (bestNode.x == x1 && bestNode.y == y1) {
-            return generatePath(bestNode, x0, y0);
-        }
-
-        // Checks neighbors
-        let children = bestNode.children;
-        children.forEach(n => {
-            if (n.signature != signature) {
-                n.signature = signature;
-                n.inClose = false;
-                n.inOpen = false;
-                n.f = 0;
-                n.g = 0;
-            }
-            if (n.inClose) return;
-
-
-            let g = bestNode.g + 1;
-            if (n.g < g) {
-                n.parent = bestNode;
-                n.g = g;
-                n.f = g + getH(n, x1, y1);
-                if (!n.inOpen) {
-                    openSet.push(n);
-                }
-            }
-        });
-
-    }// end while
-
-    return null;*/
 }
 
 export { getPath };
