@@ -27,10 +27,9 @@ function getBit(node, bit) {
 /**
  * Converts 2d array of numbers to 2d array of nodes
  * @param {number[][]} map2d 2d array of numbers representing a 2d space (0 = walkable, non 0 = obstacle)
- * @param {boolean} [allowCorners = false] should path pass through corners?
  * @returns {Object[][]} 2d array of nodes used by other functions to search paths
  */
-function makeGrid(map2d, allowCorners) {
+function makeGrid(map2d) {
     const height = map2d.length;
     const width = map2d[0].length;
     const grid = [];
