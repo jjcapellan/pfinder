@@ -10,10 +10,11 @@ const queries40x40 = [
     [0, 39, 39, 0]
 ];
 
+// Valid paths (not null solution)
 const queries500x500 = [
     [6, 12, 499, 499], [1, 1, 498, 498],
     [0, 0, 497, 497], [1, 1, 320, 498],
-    [12, 12, 400, 499], [0, 0, 496, 499],
+    [12, 12, 383, 484], [0, 0, 496, 499],
     [1, 1, 8, 498], [3, 0, 499, 499],
     [12, 12, 320, 498], [10, 10, 466, 464]
 ];
@@ -70,17 +71,6 @@ function bench(grid, queries, func, sleepTime, cycles) {
 
 let grid = null;
 
-console.log('\n****** Using makeGrid(map, true) ******');
-console.log('****************************************');
-grid = makeGrid(map40x40, true);
-await sleep(500);
-bench(grid, queries40x40, getPath, 200, 20);
-grid = makeGrid(map500x500, true);
-await sleep(500);
-bench(grid, queries500x500, getPath, 200, 20);
-
-console.log('\n****** Using makeGrid(map, false) ******');
-console.log('****************************************');
 grid = makeGrid(map40x40);
 await sleep(500);
 bench(grid, queries40x40, getPath, 200, 20);
