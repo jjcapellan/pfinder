@@ -76,4 +76,4 @@ function makeGrid(map2d, allowCorners) {
 
 }
 
-export { makeGrid };
+export { getBit, makeGrid };
