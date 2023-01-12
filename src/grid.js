@@ -15,7 +15,8 @@ function makeNode(x, y) {
         inOpen: false,
         inClose: false,
         g: 0,
-        f: 0
+        f: 0,
+        hash: 0 // current operation hash
     };
 };
 
