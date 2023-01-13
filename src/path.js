@@ -41,7 +41,6 @@ function generatePath(node) {
     while (current) {
         path[i++] = { x: current.x, y: current.y };
         current = current.parent;
-
     };
 
     return path.reverse();
@@ -182,7 +181,6 @@ function getPath(grid, x0, y0, x1, y1) {
                         if (node.hash != nhash) resetNode(node, nhash);
 
                         if (distA) {
-
                             if (checkTarget(node, target, dirA, distA)) {
                                 if (j) node.parent = best;
                                 target.parent = node;
@@ -191,14 +189,13 @@ function getPath(grid, x0, y0, x1, y1) {
 
                             if (getBit(node, dirA)) {
                                 let next = getNext(grid, node, distA, dirA);
-
                                 if (next.hash != nhash) resetNode(next, nhash);
 
-                                let g = best.g + distance;
+                                let g = best.g + j * Math.SQRT2; // h**2 = c1**2 + c2**2 (h > c)
                                 if (j) node.parent = best;
                                 node.g = g;
-                                g = node.g + j;
-                                if (next.inClose || (next.inOpen && next.g < g)) continue;
+                                g = node.g + distA;
+                                if (next.inClose || (next.inOpen && next.g <= g)) continue;
 
                                 next.parent = node;
                                 next.g = g;
@@ -219,16 +216,16 @@ function getPath(grid, x0, y0, x1, y1) {
                                 target.parent = node;
                                 return generatePath(target);
                             }
+
                             if (getBit(node, dirB)) {
                                 let next = getNext(grid, node, distB, dirB);
-
                                 if (next.hash != nhash) resetNode(next, nhash);
 
-                                let g = best.g + distance;
+                                let g = best.g + j * Math.SQRT2;
                                 if (j) node.parent = best;
                                 node.g = g;
-                                g = node.g + j;
-                                if (next.inClose || (next.inOpen && next.g < g)) continue;
+                                g = node.g + distB;
+                                if (next.inClose || (next.inOpen && next.g <= g)) continue;
 
                                 next.parent = node;
                                 next.g = g;
@@ -245,13 +242,12 @@ function getPath(grid, x0, y0, x1, y1) {
                 }
 
                 // ends on jump
-                if (getBit(best, d)) {
+                if (d%2 != 0 && getBit(best, d)) {
                     let next = getNext(grid, best, distance, d);
-
                     if (next.hash != nhash) resetNode(next, nhash);
 
                     let g = best.g + distance;
-                    if (next.inClose || (next.inOpen && next.g < g)) continue;
+                    if (next.inClose || (next.inOpen && next.g <= g)) continue;
 
                     next.parent = best;
                     next.g = g;
