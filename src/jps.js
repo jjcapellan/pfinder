@@ -70,7 +70,6 @@ function diagonalScan(map, grid, x0, y0, params) {
         count++;
         s = getSignature(map, x0 + p.h * count, y0 + p.v * count);
         const isJump = grid[y0 + p.v * count][x0 + p.h * count].jump;
-        if (x0 == 0 && y0 == 0) console.log(s);
         if ((s[p.a] || s[p.b] || s[p.c]) && !isJump) return { dst: count, isJump: false };
 
 
