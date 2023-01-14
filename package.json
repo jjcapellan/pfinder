@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "npm run test && node scripts/build.js",
+    "release": "npm run test && npm publish",
     "test": "cd test && node test.js"
   },
   "keywords": [
