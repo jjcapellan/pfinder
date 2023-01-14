@@ -35,6 +35,9 @@ const dirParams = [
     { v: 0, h: -1 },
 ];
 
+// lookup table for checkdir
+const dirsTable = [0, 1, 2, 7, null, 3, 6, 5, 4];
+
 function generatePath(node) {
     const path = [];
     let current = node;
@@ -81,17 +84,12 @@ function getNext(grid, node, distance, dir) {
     return grid[node.y + p.v * distance][node.x + p.h * distance];
 }
 
+// Checks if target is in sigh exploring in current direction
 function checkDir(node, target, dir) {
-    let dx = target.x - node.x;
-    let dy = target.y - node.y;
-    if (dir == 1) return dx == 0 && dy < 0;
-    if (dir == 3) return dx > 0 && dy == 0;
-    if (dir == 5) return dx == 0 && dy > 0;
-    if (dir == 7) return dx < 0 && dy == 0;
-    if (dir == 0) return dx == dy && dx < 0;
-    if (dir == 2) return dx == -dy && dx > 0;
-    if (dir == 4) return dx == dy && dx > 0;
-    if (dir == 6) return dx == -dy && dx < 0;
+    let dx = Math.sign(target.x - node.x);
+    let dy = Math.sign(target.y - node.y);
+
+    return dirsTable[4 + dx + 3 * dy] == dir;
 }
 
 function checkTarget(node, target, dir, distance) {
