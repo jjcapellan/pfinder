@@ -50,7 +50,7 @@ function getH(node, x1, y1) {
     let dx = Math.abs(node.x - x1);
     let dy = Math.abs(node.y - y1);
     // h = D * (dx + dy) + (sqrt(D^2 + D^2) - 2 * D) * min(dx, dy)
-    return Math.floor(10 * (dx + dy) - 5.857 * Math.min(dx, dy));
+    return (10 * (dx + dy) - 5.857 * Math.min(dx, dy)) | 0; // valid for 32bit integers (max: 4,294,967,295 )
 }
 
 function getDirection(p, n) {
