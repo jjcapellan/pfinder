@@ -1,3 +1,17 @@
+# v0.6.0
+**Important**: this version could contain some breaking change for your project.  
+ 
+Previus pathfinding algorithm was replaced by one of "jump point search" type. It improves performance and memory use significantly.
+## Changes
+* *getPath* : uses a type of *jps* algorithm instead the "classic" A*. As a consequence, the routes contain mainly only the necessary points (start, end and changes of direction).
+* *makeGrid* : allowCorners parameter was removed.
+* One unique behavior: diagonal paths are allowed and corners are surrounded.
+## Improvements
+* Less memory usage: the paths returned by *getPath* contain fewer points, and the internal container (*openSet*) used to make the calculations stores far fewer nodes.
+* *getPath*: Improved performance, especially for null routes, compared to the previous version. The improvement is greater on large open maps.  
+
+---
+
 # v0.5.0
 +50% performance in 500x500 grid.
 ## Changes

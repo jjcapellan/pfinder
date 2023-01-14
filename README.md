@@ -1,14 +1,15 @@
 # Pfinder
-Pathfinding library based on the A* algorithm.
+Pathfinding library based on the A* algorithm, JPS, concepts.
 
 ---
 
 ## Features
-* Suitable for 2d grids.
+* Suitable for static 2d grids.
 * Can be used in browser and Node.
-* Minimal size: under 2Kb minified.
+* Minimal size: 3Kb minified.
 * Easy to use.
 * No dependencies.
+* Paths contains mainly significative points (start, direction changes, end).
 * Cacheable paths (optional)
 
 ---
@@ -16,13 +17,13 @@ Pathfinding library based on the A* algorithm.
 ## Installation
 ### Browser
 There are two alternatives:
-* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.5.0/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
+* Download the file [pfinder.min.js](https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.6.0/dist/pfinder.min.js) to your proyect folder and add a reference in your html:
 ```html
 <script src = "pfinder.js"></script>
 ```  
 * Point a script tag to the CDN link:
 ```html
-<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.5.0/dist/pfinder.min.js"></script>
+<script src = "https://cdn.jsdelivr.net/gh/jjcapellan/pfinder@0.6.0/dist/pfinder.min.js"></script>
 ```  
 **Important**: The library methods are exposed into the global object **Pfinder**  
 ### NPM
@@ -52,7 +53,7 @@ const grid = Pfinder.makeGrid(map);
 let path = Pfinder.getPath(grid, 0, 0, 3, 3);
 
 // getPath() returns the path as an array of points:
-// [{x: 0, y: 0}, {x: 0, y: 1}, {x: 1, y: 2}, {x: 2, y: 3}, {x: 3, y: 3}]
+// [{x: 0, y: 0}, {x: 0, y: 2}, {x: 2, y: 2}, {x: 2, y: 3}, {x: 3, y: 3}]
 ```
 ### Using cache:
 For those cases where paths are frequently repeated, we can use **getPathFromCache()** instead of getPath(). This function first looks for the requested path in cache and if it does not find it, it calls the getPath() function and saves the new path.  
@@ -82,7 +83,7 @@ Pfinder.setMaxCacheSize(256);
 let path = Pfinder.getPathFromCache(grid, 0, 0, 3, 3);
 
 // getPathFromCache() returns the path as an array of points:
-// [{x: 0, y: 0}, {x: 0, y: 1}, {x: 1, y: 2}, {x: 2, y: 3}, {x: 3, y: 3}]
+// [{x: 0, y: 0}, {x: 0, y: 2}, {x: 2, y: 2}, {x: 2, y: 3}, {x: 3, y: 3}]
 
 ```
 **Important**: Each point of one path ({x,y}) has a size of 16 bytes. With this in mind, if necessary adjust the cache size to avoid "out of memory" errors.  
@@ -90,11 +91,10 @@ let path = Pfinder.getPathFromCache(grid, 0, 0, 3, 3);
 ---
 
 ## API
-### **makeGrid(map: number[][], allowCorners?: boolean) : Object[][]** 
+### **makeGrid(map: number[][]) : Object[][]** 
 Converts 2d array of numbers to 2d array of nodes.  
 Parameters:
 * *map*: 2d array of numbers representing a 2d space (0 = walkable, non 0 = obstacle).
-* *allowCorners*: should diagonal path pass through corners?. default = false. Setting this parameter *true* improves the performance.
 
 Returns:  
 2d array of nodes used by other functions to search paths.
