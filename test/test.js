@@ -5,8 +5,8 @@ import { genqueriesArray } from './testutils.js';
 
 function checkPath(path, x0, y0, x1, y1) {
     if (!path) return false;
-    let start = path[0];
-    let end = path[path.length - 1];
+    let start = path[0]; console.log(start);
+    let end = path[path.length - 1];console.log(end);
     if (start.x != x0 || start.y != y0 || end.x != x1 || end.y != y1) return false;
     return true;
 }
@@ -16,7 +16,7 @@ function test(grid, x0, y0, x1, y1, isNull) {
     let height = grid.length;
     let path = getPath(grid, x0, y0, x1, y1);
     console.log(`\n---- Test getPath on ${width}x${height} grid ----`);
-    if ((!path && isNull) || (checkPath(grid, path, x0, y0, x1, y1) && !isNull)) {
+    if ((!path && isNull) || (checkPath(path, x0, y0, x1, y1) && !isNull)) {
         if (!isNull) {
             console.log(`Returned valid path of length ${path.length}`);
         } else {
@@ -25,7 +25,7 @@ function test(grid, x0, y0, x1, y1, isNull) {
         console.log(path);
         console.log(`****** TEST PASSED ******`);
     } else {
-        console.log(x0, y0, x1, y1);
+        console.log(x0, y0, x1, y1); console.log(path);
         console.log('****** TEST FAILED ******');
         process.exit(1);
     }
@@ -74,3 +74,4 @@ queries500x500.forEach(q => {
     process.stdout.write(`${q[0]} ${q[1]} ${q[2]} ${q[3]}` + '\r');
     getPath(grid, q[0], q[1], q[2], q[3]);
 });
+console.log('****** TEST PASSED ******');
