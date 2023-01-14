@@ -1,12 +1,11 @@
 import { makeGrid, getPath } from '../src/index.js';
-import { map40x40 } from './maps.js';
-import { map500x500 } from './map500x500.js';
+import { map40x40, map500x500 } from './maps/maps.js';
 
-// Valid paths [x0,y0,x1,y1]
+// Valid paths [x0,y0,x1,y1] (not null solution)
 const queries40x40 = [
     [0, 0, 39, 39], [0, 0, 36, 39], [2, 0, 39, 39],
-    [2, 0, 36, 39], [3, 10, 39, 39], [3, 10, 36, 39],
-    [0, 0, 30, 37], [2, 0, 30, 37], [3, 10, 30, 37],
+    [2, 0, 36, 39], [5, 10, 39, 39], [5, 10, 36, 39],
+    [0, 0, 30, 37], [2, 0, 30, 37], [5, 10, 30, 37],
     [0, 39, 39, 0]
 ];
 
@@ -57,7 +56,7 @@ function bench(grid, queries, func, sleepTime, cycles) {
             continue;
         }
 
-        times.push(duration/size);
+        times.push(duration / size);
         totalTime += duration;
     }
 
