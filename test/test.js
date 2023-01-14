@@ -5,8 +5,8 @@ import { genqueriesArray } from './testutils.js';
 
 function checkPath(path, x0, y0, x1, y1) {
     if (!path) return false;
-    let start = path[0]; console.log(start);
-    let end = path[path.length - 1];console.log(end);
+    let start = path[0];
+    let end = path[path.length - 1];
     if (start.x != x0 || start.y != y0 || end.x != x1 || end.y != y1) return false;
     return true;
 }
