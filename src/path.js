@@ -10,7 +10,7 @@ import { getBit } from './grid.js';
 let nhash = 0;
 
 // |0|1|2|
-// |7|n|3|
+// |7|n|3| Valid directionr for each exploration direction
 // |6|5|4|
 const dirFilter = [
     [7, 0, 1],
@@ -23,6 +23,7 @@ const dirFilter = [
     [5, 6, 7, 0, 1]
 ];
 
+// unit vectors advance in each direction (v * distance * y, h * distance * x)
 const dirParams = [
     { v: -1, h: -1 },
     { v: -1, h: 0 },
