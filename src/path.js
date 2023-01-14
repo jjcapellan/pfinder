@@ -111,6 +111,39 @@ function resetNode(node, hash) {
     node.f = 0;
 }
 
+function getBranchJump(grid, node, target, best, dist, dir, j) {
+    let next = getNext(grid, node, dist, dir);
+    if (next.hash != nhash) resetNode(next, nhash);
+
+    let nodeG = best.g + j * Math.SQRT2;
+    let nextG = nodeG + dist;
+    let validPath = true;
+
+    if ((next.inClose || (next.inOpen && next.g <= nextG)) || (node.inOpen && node.g <= nodeG)) {
+        validPath = false;
+    }
+
+    if (validPath) {
+
+        node.parent = best;
+        node.g = nodeG;
+        node.inOpen = true;
+
+        next.parent = node;
+        next.g = nextG;
+        next.f = nextG + getH(next, target.x, target.y);
+
+        if (!next.inOpen) {
+            return next;
+        }
+
+        return null;
+
+    }
+
+    return null;
+}
+
 /**
  * Calculates the required path from a grid
  * @param {Object[][]} grid 2d array of nodes
@@ -210,33 +243,11 @@ function getPath(grid, x0, y0, x1, y1) {
 
                             // Is there a jump in this direction?
                             if (getBit(node, dirA)) {
-                                let next = getNext(grid, node, distA, dirA);
-                                if (next.hash != nhash) resetNode(next, nhash);
-
-                                let nodeG = best.g + j * Math.SQRT2;
-                                let nextG = nodeG + distA;
-                                let validPath = true;
-
-                                if ((next.inClose || (next.inOpen && next.g <= nextG)) || (node.inOpen && node.g <= nodeG)) {
-                                    validPath = false;
-                                }
-
-                                if (validPath) {
-
-                                    node.parent = best;
-                                    node.g = nodeG;
-                                    node.inOpen = true;
-
-                                    next.parent = node;
-                                    next.g = nextG;
-                                    next.f = nextG + getH(next, x1, y1);
-
-                                    if (!next.inOpen) {
-                                        next.inOpen = true;
-                                        next.inClose = false;
-                                        openSet.push(next);
-                                    }
-
+                                let next = getBranchJump(grid, node, target, best, distA, dirA, j);
+                                if (next) {
+                                    next.inOpen = true;
+                                    next.inClose = false;
+                                    openSet.push(next);
                                 }
                             }
 
@@ -251,37 +262,18 @@ function getPath(grid, x0, y0, x1, y1) {
                             }
 
                             if (getBit(node, dirB)) {
-                                let next = getNext(grid, node, distB, dirB);
-                                if (next.hash != nhash) resetNode(next, nhash);
-
-                                let nodeG = best.g + j * Math.SQRT2;
-                                let nextG = nodeG + distB;
-                                let validPath = true;
-                                if ((next.inClose || (next.inOpen && next.g <= nextG)) || (node.inOpen && node.g <= nodeG)) {
-                                    validPath = false;
-                                }
-
-                                if (validPath) {
-                                    node.parent = best;
-                                    node.g = nodeG;
-                                    node.inOpen = true;
-
-                                    next.parent = node;
-                                    next.g = nextG;
-                                    next.f = nextG + getH(next, x1, y1);
-
-                                    if (!next.inOpen) {
-                                        next.inOpen = true;
-                                        next.inClose = false;
-                                        openSet.push(next);
-                                    }
+                                let next = getBranchJump(grid, node, target, best, distB, dirB, j);
+                                if (next) {
+                                    next.inOpen = true;
+                                    next.inClose = false;
+                                    openSet.push(next);
                                 }
                             }
                         }
                     }
-                }
+                } // end if(d%2 == 0)
 
-                // ends on jump
+                // CHecks for jump in orthogonal direction
                 if (d % 2 != 0 && getBit(best, d)) {
 
                     let next = getNext(grid, best, distance, d);
