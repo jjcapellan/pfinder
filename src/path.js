@@ -137,6 +137,7 @@ function getPath(grid, x0, y0, x1, y1) {
     openSet.push(startNode);
 
     while (openSet.count) {
+
         // Extract best node
         let best = openSet.pop();
         best.inOpen = false;
@@ -149,12 +150,14 @@ function getPath(grid, x0, y0, x1, y1) {
         // Select valid directions for current exploration direction
         const dirs = best.parent ? dirFilter[getDirection(best.parent, best)] : allDirs;
 
+
         for (let i = 0; i < dirs.length; i++) {
             const d = dirs[i]; // 0..7
             const p = dirParams[d]; // {v,h} vertical and horizontal multipliers
             const distance = best.distances[d];
 
             if (distance) {
+                // checks main direction
                 if (checkTarget(best, target, d, distance)) {
                     target.parent = best;
                     return generatePath(target);
@@ -173,46 +176,76 @@ function getPath(grid, x0, y0, x1, y1) {
                     //   ||/--
                     //   |/---
                     //   n----
-                    for (let j = 0; j <= distance; j++) {
+                    for (let j = 1; j <= distance; j++) {
                         const node = grid[best.y + p.v * j][best.x + p.h * j];
                         let distA = node.distances[dirA];
                         let distB = node.distances[dirB];
 
                         if (node.hash != nhash) resetNode(node, nhash);
 
+                        // Does diagonal finish in jump node? 
+                        if (j == distance && node.jump) {
+                            let nodeG = best.g + j * Math.SQRT2;
+                            if (node.inClose || (node.inOpen && node.g <= nodeG)) continue;
+                            node.parent = best;
+                            node.g = nodeG;
+                            node.f = nodeG + getH(node, x1, y1);
+
+                            if (!node.inOpen) {
+                                node.inOpen = true;
+                                node.inClose = false;
+                                openSet.push(node);
+                            }
+                            continue;
+                        }
+
+                        // Checks branch A
                         if (distA) {
+                            // Checks direction end
                             if (checkTarget(node, target, dirA, distA)) {
-                                if (j) node.parent = best;
+                                node.parent = best;
                                 target.parent = node;
                                 return generatePath(target);
                             }
 
+                            // Is there a jump in this direction?
                             if (getBit(node, dirA)) {
                                 let next = getNext(grid, node, distA, dirA);
                                 if (next.hash != nhash) resetNode(next, nhash);
 
-                                let g = best.g + j * Math.SQRT2; // h**2 = c1**2 + c2**2 (h > c)
-                                if (j) node.parent = best;
-                                node.g = g;
-                                g = node.g + distA;
-                                if (next.inClose || (next.inOpen && next.g <= g)) continue;
+                                let nodeG = best.g + j * Math.SQRT2;
+                                let nextG = nodeG + distA;
+                                let validPath = true;
 
-                                next.parent = node;
-                                next.g = g;
-                                next.f = g + getH(next, x1, y1);
+                                if ((next.inClose || (next.inOpen && next.g <= nextG)) || (node.inOpen && node.g <= nodeG)) {
+                                    validPath = false;
+                                }
 
-                                if (!next.inOpen) {
-                                    next.inOpen = true;
-                                    next.inClose = false;
-                                    openSet.push(next);
+                                if (validPath) {
+
+                                    node.parent = best;
+                                    node.g = nodeG;
+                                    node.inOpen = true;
+
+                                    next.parent = node;
+                                    next.g = nextG;
+                                    next.f = nextG + getH(next, x1, y1);
+
+                                    if (!next.inOpen) {
+                                        next.inOpen = true;
+                                        next.inClose = false;
+                                        openSet.push(next);
+                                    }
+
                                 }
                             }
 
                         }
 
+                        // Checks branch B
                         if (distB) {
                             if (checkTarget(node, target, dirB, distB)) {
-                                if (j) node.parent = best;
+                                node.parent = best;
                                 target.parent = node;
                                 return generatePath(target);
                             }
@@ -221,20 +254,27 @@ function getPath(grid, x0, y0, x1, y1) {
                                 let next = getNext(grid, node, distB, dirB);
                                 if (next.hash != nhash) resetNode(next, nhash);
 
-                                let g = best.g + j * Math.SQRT2;
-                                if (j) node.parent = best;
-                                node.g = g;
-                                g = node.g + distB;
-                                if (next.inClose || (next.inOpen && next.g <= g)) continue;
+                                let nodeG = best.g + j * Math.SQRT2;
+                                let nextG = nodeG + distB;
+                                let validPath = true;
+                                if ((next.inClose || (next.inOpen && next.g <= nextG)) || (node.inOpen && node.g <= nodeG)) {
+                                    validPath = false;
+                                }
 
-                                next.parent = node;
-                                next.g = g;
-                                next.f = g + getH(next, x1, y1);
+                                if (validPath) {
+                                    node.parent = best;
+                                    node.g = nodeG;
+                                    node.inOpen = true;
 
-                                if (!next.inOpen) {
-                                    next.inOpen = true;
-                                    next.inClose = false;
-                                    openSet.push(next);
+                                    next.parent = node;
+                                    next.g = nextG;
+                                    next.f = nextG + getH(next, x1, y1);
+
+                                    if (!next.inOpen) {
+                                        next.inOpen = true;
+                                        next.inClose = false;
+                                        openSet.push(next);
+                                    }
                                 }
                             }
                         }
@@ -242,16 +282,19 @@ function getPath(grid, x0, y0, x1, y1) {
                 }
 
                 // ends on jump
-                if (d%2 != 0 && getBit(best, d)) {
+                if (d % 2 != 0 && getBit(best, d)) {
+
                     let next = getNext(grid, best, distance, d);
                     if (next.hash != nhash) resetNode(next, nhash);
 
-                    let g = best.g + distance;
-                    if (next.inClose || (next.inOpen && next.g <= g)) continue;
+                    let nextG = best.g + distance;
+                    if (next.inClose || (next.inOpen && next.g <= nextG)) {
+                        continue;
+                    }
 
                     next.parent = best;
-                    next.g = g;
-                    next.f = g + getH(next, x1, y1);
+                    next.g = nextG;
+                    next.f = nextG + getH(next, x1, y1);
 
                     if (!next.inOpen) {
                         next.inOpen = true;
