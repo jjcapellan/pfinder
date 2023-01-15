@@ -1,5 +1,6 @@
 # Pfinder
-Pathfinding library based on the A* algorithm, JPS, concepts.
+Pathfinding library based on the A* algorithm, JPS, concepts.  
+Demo: https://jjcapellan.github.io/pfinder-demo/
 
 ---
 
