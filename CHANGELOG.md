@@ -1,3 +1,10 @@
+#v 0.6.1
+## Fixes
+* *getPathFromCache*: returns null for valid paths  
+
+---
+
+
 # v0.6.0
 **Important**: this version could contain some breaking change for your project.  
  

@@ -1,6 +1,6 @@
 {
   "name": "pfinder",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Pathfinding based on jump point search (JPS) algorithm.",
   "main": "src/index.js",
   "type": "module",
