@@ -24,8 +24,8 @@ function savePath(path, x0, y0, x1, y1) {
  * @returns {(Object[] | null)} Required path as an array of points (example: [{x: x0,y: y0}, {x: 2, y: 3}, ... , {x: x1, y: y1}]). 
  * If required path is not found, returns null.
  */
- function getPathFromCache(grid, x0, y0, x1, y1) {
-    if (grid[y0][x0].isWall || grid[y1][x1].isWall) return null;
+function getPathFromCache(grid, x0, y0, x1, y1) {
+    if (!grid[y0][x0] || !grid[y1][x1]) return null;
 
     let p = cache.get(x0 + '.' + y0 + '.' + x1 + '.' + y1);
     if (p !== undefined) {
