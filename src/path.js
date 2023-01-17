@@ -303,15 +303,36 @@ function getPath(grid, x0, y0, x1, y1) {
     return null;
 }
 
+/**
+ * Sets the number of max paths calculated in one frame
+ * @param {number} n Max number of paths calculated in one frame. For example, 
+ * if n == 20, that means that in a game running at 60 FPS, 1200 (60x20) paths 
+ * per second will be calculated.  
+ */
 function setMaxPathsPerFrame(n) {
     n = Math.max(0, n);
     pathsPerFrame = n;
 }
 
+/**
+ * Calls getPath() asynchronously.
+ * Specifically, it creates a task and adds it to a queue. This task will be 
+ * executed after call update() method.
+ * @param {Object[][]} grid 2d array of nodes
+ * @param {number}     x0 x-coordinate of the path origin
+ * @param {number}     y0 y-coordinate of the path origin
+ * @param {number}     x1 x-coordinate of the path end
+ * @param {number}     y1 y-coordinate of the path end
+ * @param {function}   callback callback function which receives the path as parameter 
+ */
 function getPathAsync(grid, x0, y0, x1, y1, callback) {
     queue.push([grid, x0, y0, x1, y1, callback]);
 }
 
+/**
+ * Starts the tasks stored in the task queue. At most it will execute the 
+ * MaxPathsPerFrame tasks.
+ */
 function update() {
     for (let i = 0; i < pathsPerFrame; i++) {
         let t = queue.shift();
