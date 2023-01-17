@@ -4,7 +4,7 @@
 */
 
 import { makeGrid } from './grid.js';
-import { getPath, getPathAsync, setMaxPathsPerFrame, update } from './path.js';
+import { getPath, getPathAsync, getMaxPathsPerFrame, setMaxPathsPerFrame, update } from './path.js';
 import { getPathFromCache, setMaxCacheSize } from './cache.js';
 
 if (typeof window != 'undefined') {
@@ -19,4 +19,4 @@ if (typeof window != 'undefined') {
     };
 }
 
-export { getPath, getPathAsync, getPathFromCache, makeGrid, setMaxCacheSize, setMaxPathsPerFrame, update };
+export { getPath, getPathAsync, getPathFromCache, getMaxPathsPerFrame, makeGrid, setMaxCacheSize, setMaxPathsPerFrame, update };

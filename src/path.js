@@ -315,6 +315,14 @@ function setMaxPathsPerFrame(n) {
 }
 
 /**
+ * Gets number of max paths calculated in one frame.
+ * @returns {number}
+ */
+function getMaxPathsPerFrame(){
+    return pathsPerFrame;
+}
+
+/**
  * Calls getPath() asynchronously.
  * Specifically, it creates a task and adds it to a queue. This task will be 
  * executed after call update() method.
@@ -342,4 +350,4 @@ function update() {
     }
 }
 
-export { getPath, getPathAsync, setMaxPathsPerFrame, update };
+export { getPath, getPathAsync, getMaxPathsPerFrame, setMaxPathsPerFrame, update };
