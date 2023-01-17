@@ -4,16 +4,19 @@
 */
 
 import { makeGrid } from './grid.js';
-import { getPath, setMaxPathsPerFrame } from './path.js';
+import { getPath, getPathAsync, setMaxPathsPerFrame, update } from './path.js';
 import { getPathFromCache, setMaxCacheSize } from './cache.js';
 
 if (typeof window != 'undefined') {
     globalThis.Pfinder = {
         getPath: getPath,
+        getPathAsync: getPathAsync,
         getPathFromCache: getPathFromCache,
         makeGrid: makeGrid,
-        setMaxCacheSize: setMaxCacheSize
+        setMaxCacheSize: setMaxCacheSize,
+        setMaxPathsPerFrame: setMaxPathsPerFrame,
+        update: update
     };
 }
 
-export { getPath, getPathFromCache, makeGrid, setMaxCacheSize, setMaxPathsPerFrame };
+export { getPath, getPathAsync, getPathFromCache, makeGrid, setMaxCacheSize, setMaxPathsPerFrame, update };

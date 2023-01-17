@@ -11,6 +11,8 @@ let nhash = 0;
 
 let pathsPerFrame = 20;
 
+const queue = [];
+
 // |0|1|2|
 // |7|n|3| Valid directionr for each exploration direction
 // |6|5|4|
@@ -306,4 +308,17 @@ function setMaxPathsPerFrame(n) {
     pathsPerFrame = n;
 }
 
-export { getPath, setMaxPathsPerFrame };
+function getPathAsync(grid, x0, y0, x1, y1, callback) {
+    queue.push([grid, x0, y0, x1, y1, callback]);
+}
+
+function update() {
+    for (let i = 0; i < pathsPerFrame; i++) {
+        let t = queue.shift();
+        if (!t) break;
+        let p = getPath(t[0], t[1], t[2], t[3], t[4]);
+        t[5](p);
+    }
+}
+
+export { getPath, getPathAsync, setMaxPathsPerFrame, update };
