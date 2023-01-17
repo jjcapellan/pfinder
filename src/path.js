@@ -9,6 +9,8 @@ import { getBit } from './grid.js';
 // Node.hash: allow reuse the grid. nhash identifies unique search operation
 let nhash = 0;
 
+let pathsPerFrame = 20;
+
 // |0|1|2|
 // |7|n|3| Valid directionr for each exploration direction
 // |6|5|4|
@@ -299,4 +301,9 @@ function getPath(grid, x0, y0, x1, y1) {
     return null;
 }
 
-export { getPath };
+function setMaxPathsPerFrame(n) {
+    n = Math.max(0, n);
+    pathsPerFrame = n;
+}
+
+export { getPath, setMaxPathsPerFrame };

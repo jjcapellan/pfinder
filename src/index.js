@@ -4,7 +4,7 @@
 */
 
 import { makeGrid } from './grid.js';
-import { getPath } from './path.js';
+import { getPath, setMaxPathsPerFrame } from './path.js';
 import { getPathFromCache, setMaxCacheSize } from './cache.js';
 
 if (typeof window != 'undefined') {
@@ -16,4 +16,4 @@ if (typeof window != 'undefined') {
     };
 }
 
-export { getPath, getPathFromCache, makeGrid, setMaxCacheSize };
+export { getPath, getPathFromCache, makeGrid, setMaxCacheSize, setMaxPathsPerFrame };
