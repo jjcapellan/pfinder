@@ -1,4 +1,10 @@
-#v 0.6.1
+# v0.7.0
+## New features
+* *Asynchronous mode*: This version introduces a simple system based in a task queue to limit the number of calls to *getPath* per frame. It only is effective for games or other apps with main loop. The functions *getPathAsysnc*, *update*, *getMaxPathsPerFrame*, and *setMaxPathsPerFrame* compose this system.  
+
+---
+
+# v0.6.1
 ## Fixes
 * *getPathFromCache*: returns null for valid paths  
 
