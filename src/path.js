@@ -318,7 +318,7 @@ function setMaxPathsPerFrame(n) {
  * Gets number of max paths calculated in one frame.
  * @returns {number}
  */
-function getMaxPathsPerFrame(){
+function getMaxPathsPerFrame() {
     return pathsPerFrame;
 }
 
